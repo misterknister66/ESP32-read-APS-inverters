@@ -1,0 +1,67 @@
+name: Build ESP32-ECU Firmware
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    
+    - name: Set up Arduino CLI
+      uses: arduino/setup-arduino-cli@v2
+    
+    - name: Install ESP32 core
+      run: |
+        arduino-cli config init --overwrite
+        arduino-cli core install esp32:esp32
+    
+    - name: Install libraries
+      run: |
+        arduino-cli lib install "ArduinoJson"
+        arduino-cli lib install "ESPAsyncWebSrv"
+        arduino-cli lib install "AsyncTCP"
+        arduino-cli lib install "PSACrypto"
+        arduino-cli lib install "PubSubClient"
+        arduino-cli lib install "NTPClient"
+        arduino-cli lib install "Ticker"
+        arduino-cli lib install "Time"
+        
+    - name: Debug - List workspace contents
+      run: |
+        echo "=== Current directory ==="
+        pwd
+        echo "=== Subdirectories ==="
+        find . -maxdepth 2 -type f -regex '.*\.\(h\|ino\|c.*\)'
+        echo "=== Patch sunMoon Time dependency ==="
+        echo "Bad Hack: Windows is Case insensitive with filenames "
+        echo "therfore including Time.h was satisfied with existing time.h "
+        echo "but on Linux this does matter. Thats the reason this Library was renamed TimeLib "
+        echo "Lets correct this issue before compiling on Linux. "
+        sed -i 's/<Time\.h>/<TimeLib\.h>/' ./sunMoon/sunMoon.h
+    
+    - name: Build firmware
+      run: |
+        arduino-cli compile \
+          --fqbn esp32:esp32:esp32 \
+          --output-dir ./build \
+          --libraries "$(pwd)" \
+          ESP32-read-APS-inverters.ino
+        arduino-cli lib list
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: esp32-firmware-build-${{ github.run_number }}
+        path: ./build/
+        retention-days: 30
+        compression-level: 6
+
