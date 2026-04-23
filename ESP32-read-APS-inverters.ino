@@ -1,7 +1,7 @@
 //#include <AsyncJson.h>
 #include <ArduinoJson.h>
-
-#include <ESPAsyncWebSrv.h>
+#include <ESPAsyncWebServer.h>
+//#include <ESPAsyncWebSrv.h>
 #include <AsyncTCP.h>
 #include <AsyncEventSource.h>
 //#include "esp_heap_caps.h"
@@ -53,7 +53,7 @@
 Preferences preferences;
 //#include "Async_TCP.h" //we include the customized one
 
-//#include <ESPAsyncWebServer.h>
+
 AsyncWebServer server(80);
 AsyncEventSource events("/events"); 
 AsyncWebSocket ws("/ws");

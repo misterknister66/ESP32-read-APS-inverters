@@ -27,14 +27,18 @@ jobs:
     - name: Install libraries
       run: |
         arduino-cli lib install "ArduinoJson"
-        arduino-cli lib install "ESPAsyncWebSrv"
-        arduino-cli lib install "AsyncTCP"
         arduino-cli lib install "PSACrypto"
         arduino-cli lib install "PubSubClient"
         arduino-cli lib install "NTPClient"
-        arduino-cli lib install "Ticker"
         arduino-cli lib install "Time"
-        
+
+    - name: Install required libraries2 
+      run: |
+          pwd 
+          git clone https://github.com/mathieucarbou/AsyncTCP.git
+          git clone https://github.com/mathieucarbou/ESPAsyncWebServer.git
+          ls 
+
     - name: Debug - List workspace contents
       run: |
         echo "=== Current directory ==="
