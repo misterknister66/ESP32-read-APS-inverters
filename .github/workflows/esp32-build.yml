@@ -32,12 +32,12 @@ jobs:
         arduino-cli lib install "NTPClient"
         arduino-cli lib install "Time"
 
-    - name: Install required libraries (AsyncTCP + ESPAsyncWebServer)
+    - name: Install required libraries2 
         run: |
-          mkdir -p ~/Arduino/libraries
-          cd ~/Arduino/libraries
+          pwd 
           git clone https://github.com/mathieucarbou/AsyncTCP.git
           git clone https://github.com/mathieucarbou/ESPAsyncWebServer.git
+          ls 
 
     - name: Debug - List workspace contents
       run: |
