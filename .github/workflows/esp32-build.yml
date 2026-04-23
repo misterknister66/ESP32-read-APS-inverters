@@ -32,7 +32,6 @@ jobs:
         arduino-cli lib install "PSACrypto"
         arduino-cli lib install "PubSubClient"
         arduino-cli lib install "NTPClient"
-        arduino-cli lib install "Ticker"
         arduino-cli lib install "Time"
         
     - name: Debug - List workspace contents
